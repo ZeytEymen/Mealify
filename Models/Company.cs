@@ -46,12 +46,12 @@ namespace Mealify.Models
         [ForeignKey("StateId")]
         public State? State { get; set; }
 
-        public int? ParentCompany { get; set; }
+        public int? ParentCompanyId { get; set; }
 
-        [ForeignKey("ParentCompany")]
-        public Company? ParetCompany { get; set; }
+        [ForeignKey("ParentCompanyId")]
+        public Company? ParentCompany { get; set; }
 
-
+        public List<Restaurant>? Restaurants { get; set; }
 
 
     }

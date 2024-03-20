@@ -2,8 +2,145 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>xqwxqwxq</h1>
-<div class="modal-dialog modal-dialog-centered">
-    ...
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu-container {
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .category {
+        margin-bottom: 2rem;
+    }
+
+        .category h2 {
+            margin-top: 0;
+            color: coral;
+            font-family: Copperplate, Fantasy;
+        }
+
+    .menu-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .menu-item {
+        flex: 1 1 45%;
+        display: flex;
+        align-items: center;
+    }
+
+        .menu-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 0.2rem;
+        }
+
+        .menu-item h2 {
+            margin-top: 0;
+        }
+</style>
+
+<hr />
+
+<div class="row g-3">
+    <div class="col">
+        <select id="CompanyList" name="CompanyList" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            <option value="">Select A Company</option>
+            @foreach (var company in ViewBag.Companies)
+            {
+                <option value="@company.Value">@company.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col">
+        <select id="RestaurantList" name="RestaurantList" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            <option value="">Select Restaurant</option>
+
+        </select>
+    </div>
 </div>
 
+<div class="d-grid gap-2">
+    <button id="submit-button" value="Retrieve Selected Records" class="btn btn-primary" type="button">Retrieve Selected Records</button>
+</div>
+<hr />
+<div class="menu-container">
+
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>$(function () {
+        $('#CompanyList').change(function () {
+            alert("change");
+            var id = $('#CompanyList').val();
+            $.ajax({
+                url: '/Home/GetRestaurants',
+                data: { CompanyId: id },
+                type: "POST",
+                dataType: "Json",
+                success: function (data) {
+                    console.log(data);
+                    $('#RestaurantList').empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $('#RestaurantList').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
+                    }
+                }
+            });
+        });
+    });</script><!-- jQuery kütüphanesini dahil edin (eğer daha önce dahil edilmediyse) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+
+
+<script>$(document).ready(function () {
+        $('#submit-button').click(function () {
+            var restaurantId = $('#RestaurantList').val();
+            if (restaurantId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/GetFoodList',
+                    data: { RestaurantList: restaurantId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Kategori adına göre yiyecekleri gruplayan bir nesne oluştur
+                        var categorizedFoods = {};
+                        $.each(data, function (index, food) {
+                            var categoryName = food.category.name;
+                            if (!categorizedFoods[categoryName]) {
+                                categorizedFoods[categoryName] = [];
+                            }
+                            categorizedFoods[categoryName].push(food);
+                        });
+
+                        // Menü içeriğini temizle
+                        $('.menu-container').empty();
+
+                        // Her bir kategori için
+                        $.each(categorizedFoods, function (categoryName, foods) {
+                            var categoryHtml = '<div class="category"><center><h2> -->  ' + categoryName + '  <-- </h2></center><hr/><div class="menu-grid">';
+                            // Her bir yiyecek için
+                            $.each(foods, function (foodIndex, food) {
+                                var foodHtml = '<div class="menu-item"><img src="/logo.png"><div><h3>' + food.name + '</h3><p>' + food.description + '. ' + food.price + ' ₺</p></div></div>';
+                                categoryHtml += foodHtml;
+                            });
+
+                            categoryHtml += '</div></div>';
+                            $('.menu-container').append(categoryHtml);
+                        });
+                    }
+                });
+            }
+        });
+    });</script>

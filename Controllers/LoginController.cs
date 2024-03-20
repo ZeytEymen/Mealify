@@ -47,8 +47,12 @@ namespace Mealify.Controllers
 
         public ActionResult Logout()
         {
-            _signInManager.SignOutAsync().Wait();
+            if (User.Identity.IsAuthenticated)
+            {
+                _signInManager.SignOutAsync().Wait();
+            }
             return RedirectToAction("Index", "Login");
         }
+
     }
 }
