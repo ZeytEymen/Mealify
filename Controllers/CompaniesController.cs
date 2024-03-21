@@ -19,6 +19,9 @@ using Mealify.Models;
 
 namespace Mealify.Controllers
 {
+    /// <summary>
+    /// sefsefsefsefesfesfsefse
+    /// </summary>
     public class CompaniesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
