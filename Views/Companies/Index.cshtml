@@ -28,8 +28,8 @@
             <th>Web Address</th>
             <th>Register Date</th>
             <th>Tax Number</th>
-            <th>State</th>
             <th>Parent Company</th>
+            <th>State</th>
             <th style="width:315px;">Actions</th>
         </tr>
     </thead>
@@ -61,8 +61,8 @@
                 <td>@item.WebAddress</td>
                 <td>@item.RegisterDate</td>
                 <td>@item.TaxNumber</td>
-                <td><span class="btn @ViewBag.Cls btn-sm">@ViewBag.State</span></td>
                 <td>@(item.ParentCompany != null ? item.ParentCompany.Name : "No Parent")</td>
+                <td><span class="btn @ViewBag.Cls btn-sm">@ViewBag.State</span></td>
                 <td>
                     <a class="btn btn-info btn-sm">Owned Restaurants</a>
                     <a data-url="Companies/Edit/@item.Id" data-title="Update @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-primary btn-sm">Edit</a>

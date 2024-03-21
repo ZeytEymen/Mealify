@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+
+@model Mealify.Models.Restaurant
+
+@if (!ViewBag.Authorized)
+{
+    <p class="text-center">Seems like <strong class="text-bg-danger">&nbsp;YOU ARE NOT AUTHORIZED&nbsp;</strong> for this action !!!</p>
+}
+@if (ViewBag.Authorized)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="postResult"></div>
+            <form id="createRestaurant" onsubmit="return false">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="control-label"></label>
+                    <input asp-for="PostalCode" class="form-control" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AddressDetail" class="control-label"></label>
+                    <input asp-for="AddressDetail" class="form-control" />
+                    <span asp-validation-for="AddressDetail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StateId" class="control-label"></label>
+                    <select asp-for="StateId" class="form-control" asp-items="ViewBag.StateId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div><br />
+                <div class="form-group">
+                    <input data-send="1" data-post-url="Restaurants/Create" data-action="createRestaurant" type="submit" value="Create" class="btn btn-primary float-end" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
