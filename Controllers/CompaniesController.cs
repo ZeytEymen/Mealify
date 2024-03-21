@@ -20,6 +20,7 @@ using Mealify.Models;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.AspNetCore.Http.Metadata;
+using System.Data;
 
 
 namespace Mealify.Controllers
@@ -64,8 +65,64 @@ namespace Mealify.Controllers
             return View(companies);
         }
 
+        public ActionResult Create()
+        {
+            var activeUser = _userManager.GetUserAsync(User).Result;
+            var role = _userManager.GetRolesAsync(activeUser).Result;
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
+            {
+                ViewBag.Authorized = true;
+            }
+            else
+                ViewBag.Authorized = false;
+
+            ViewData["StateId"] = new SelectList(_context.Set<State>(), "Id", "Name");
+            ViewData["ParentCompanyId"] = new SelectList(_context.Set<Company>(), "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,CompanyAdmin")]
+        public ActionResult Create(Company company)
+        {
+            company.RegisterDate = DateTime.Now;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Add(company);
+                    _context.SaveChanges();
+                    return Ok("ok");
+                    //eturn RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    var errorMessages = ModelState.Values.SelectMany(v => v.Errors)
+                                 .Select(e => e.ErrorMessage)
+                                 .ToList();
+                    var errorMessage = string.Join(" ", errorMessages);
+
+                    return Ok(errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+            ViewData["StateId"] = new SelectList(_context.Set<State>(), "Id", "Name", company.StateId);
+            return View(company);
+        }
+
         public ActionResult Edit(int? id)
         {
+            var activeUser = _userManager.GetUserAsync(User).Result;
+            var role = _userManager.GetRolesAsync(activeUser).Result;
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
+            {
+                ViewBag.Authorized = true;
+            }
+            else
+                ViewBag.Authorized = false;
             var company = _context.Companies!.FindAsync(id).Result;
             if (company == null)
                 return NotFound();
@@ -76,9 +133,9 @@ namespace Mealify.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,CompanyAdmin")]
         public ActionResult Edit(Company company)
         {
-            //var oldCompany = _context.Companies!.Where(r => r.Id == company.Id).FirstOrDefault();
             company.RegisterDate = DateTime.Now;
             try
             {
@@ -106,7 +163,6 @@ namespace Mealify.Controllers
 
         public ActionResult Delete(int id)
         {
-
             var activeUser = _userManager.GetUserAsync(User).Result;
             var role = _userManager.GetRolesAsync(activeUser).Result;
             if (role.Contains("Admin") || role.Contains("CompanyAdmin"))

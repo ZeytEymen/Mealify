@@ -42,10 +42,10 @@
                     
                     $.post(sendUrl, sendData, function (data) {
                         if (data == 'ok') {
-                            $('.postResult').html('<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Başarılı</strong> Güncelleme başarılı<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.postResult').html('<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success! </strong>Operation Successfully Complated<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
 
                         } else {
-                            $('.postResult').html('<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Hata!</strong> ' + data +'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $('.postResult').html('<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error! </strong> ' + data +'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                         }
                     });
                 });

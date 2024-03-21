@@ -6,3 +6,70 @@
 }
 
 
+@model Mealify.Models.Company
+
+@if (!ViewBag.Authorized)
+{
+    <p class="text-center">Seems like <strong class="text-bg-danger">&nbsp;YOU ARE NOT AUTHORIZED&nbsp;</strong> for this action !!!</p>
+}
+@if (ViewBag.Authorized)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="postResult"></div>
+            <form id="createCompany" onsubmit="return false">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="control-label"></label>
+                    <input asp-for="PostalCode" class="form-control" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EMail" class="control-label"></label>
+                    <input asp-for="EMail" class="form-control" />
+                    <span asp-validation-for="EMail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TaxNumber" class="control-label"></label>
+                    <input asp-for="TaxNumber" class="form-control" />
+                    <span asp-validation-for="TaxNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="WebAddress" class="control-label"></label>
+                    <input asp-for="WebAddress" class="form-control" />
+                    <span asp-validation-for="WebAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StateId" class="control-label"></label>
+                    <select asp-for="StateId" class="form-control" asp-items="ViewBag.StateId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ParentCompanyId" class="control-label"></label>
+                    <select asp-for="ParentCompanyId" class="form-control" asp-items="ViewBag.ParentCompanyId">
+                        <option value="@null">No Parent</option>
+                    </select>
+
+                    <span asp-validation-for="ParentCompanyId" class="text-danger"></span>
+                </div><br />
+                <div class="form-group">
+                    <input data-send="1" data-post-url="Companies/Create" data-action="createCompany" type="submit" value="Create" class="btn btn-primary float-end" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
