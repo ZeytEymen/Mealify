@@ -23,7 +23,4 @@
   <ItemGroup>
     <None Remove="Views\Companies\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Companies\" />
-  </ItemGroup>
 </Project>

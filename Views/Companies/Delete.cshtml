@@ -4,9 +4,16 @@
 @{
     Layout = null;
 }
-
-<form>
-    
-    <p>Do you really want to delete these records? This process cannot be undone.</p>
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+@if(ViewBag.Authorized)
+{
+    <div class="postResult"></div>
+    <form id="deleteCompany" onsubmit="return false">
+        <input type="hidden" />
+        <span>Are you really sure delete this item</span>
+        <input data-send="1" data-post-url="Companies/Delete" data-action="deleteCompany" type="submit" value="Yes I'm Sure Delete" class="float-end btn btn-danger" />
+    </form>
+}
+@if(!ViewBag.Authorized)
+{
+    <p class="text-center">Seems like <strong class="text-bg-danger">&nbsp;YOU ARE NOT AUTHORIZED&nbsp;</strong> for this action !!!</p>
+}

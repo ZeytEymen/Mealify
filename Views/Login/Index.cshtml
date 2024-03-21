@@ -22,8 +22,6 @@
         object-fit: cover;
     }
 
-
-
     .cardbody-color {
         background-color: #ebf2fa;
     }
@@ -32,6 +30,12 @@
         text-decoration: none;
     }
 </style>
+@if(!String.IsNullOrEmpty(ViewBag.Error))
+{
+    <script>
+        alert('@ViewBag.Error');
+    </script>
+}
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -55,7 +59,7 @@
                     <div id="emailHelp" class="form-text text-center mb-5 text-dark">
                         Not Registered? -> <a href="/Login" class="text-dark fw-bold">Create An Account</a>&emsp;|&emsp;
                         Forgot Your Password -> <a href="/Login" class="text-dark fw-bold">Reset Password</a><br /><hr />
-                        <a href="/Index" class="text-light bg-black  fw-bold">&emsp;CONTINUE WITHOUT LOGIN&emsp;</a><br /><br />
+                        <a href="/Home/Index" class="text-light bg-black  fw-bold">&emsp;CONTINUE WITHOUT LOGIN&emsp;</a><br /><br />
                     </div>
                 </form>
             </div>

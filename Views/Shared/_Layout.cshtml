@@ -82,11 +82,16 @@
 
                 <div class="list-group list-group-flush">
                     <a asp-controller="Home" asp-action="Index" asp-area="" class="bi bi-house list-group-item list-group-item-action list-group-item-dark p-3 text-center">&emsp;Home</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                      
                     <a asp-controller="Companies" asp-action="Index" asp-area="" class="bi bi-building list-group-item list-group-item-action list-group-item-dark p-3 text-center">&emsp;Companies</a>
                     <a asp-controller="Restaurants" asp-action="Index" asp-area="" class="bi bi-shop list-group-item list-group-item-action list-group-item-dark p-3 text-center">&emsp;Restaurants</a>
                     <a asp-controller="Categories" asp-action="Index" asp-area="" class="bi bi-list-ul list-group-item list-group-item-action list-group-item-dark p-3 text-center">&emsp;Categories</a>
                     <a asp-controller="Food" asp-action="Index" asp-area="" class="list-group-item list-group-item-action list-group-item-dark p-3 text-center bi bi-cup-straw">&emsp;Food / Drink Items</a>
                     <a asp-controller="Home" asp-action="About" asp-area="" class="bi bi-info-circle list-group-item list-group-item-action list-group-item-dark p-3 text-center">&emsp;About / Contact</a>
+
+                }
                 </div>
             </div>
             <!-- Page content wrapper-->
@@ -101,6 +106,11 @@
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+
+                                
+                            @if (User.Identity.IsAuthenticated)
+                            {
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle badge text-bg-secondary" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Active User : [@User.Identity.Name]</a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -109,6 +119,18 @@
                                         <a class="dropdown-item" asp-controller="Login" asp-action="Logout" onclick="return confirm('Are you sure you want to log out')">Logout</a>
                                     </div>
                                 </li>
+
+                            }
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle badge text-bg-secondary" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Active User : None</a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-controller="Login" asp-action="Index">Login</a>
+                                    </div>
+                                </li>
+                                
+                            }
                             </ul>
                         </div>
                     </div>

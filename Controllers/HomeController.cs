@@ -24,10 +24,10 @@ namespace Mealify.Controllers
 
         public ActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login","Login");
-            }
+            //if (!User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("Login", "Login");
+            //}
 
             //var company = _context.Companies!.Where(c => c.StateId == 1 && c.ParentCompany != null).ToList();
             var company = _context.Companies!.Where(c => c.StateId == 1).Include(c => c.Restaurants).Where(c => c.Restaurants!.Count() >= 1).ToList();
@@ -45,7 +45,7 @@ namespace Mealify.Controllers
         public JsonResult GetFoodList(int RestaurantList)
         {
             var foods = _context.Foods!.Include(f => f.Category)
-                .Where(f => f.Category!.RestaurantId == RestaurantList) // RestaurantId'nin RestaurantList ile eşleştiği kayıtları seç
+                .Where(f => f.Category!.RestaurantId == RestaurantList && f.StateId == 1)
                 .ToList();
 
             return new JsonResult(foods.ToList());

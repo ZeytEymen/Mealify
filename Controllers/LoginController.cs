@@ -23,25 +23,46 @@ namespace Mealify.Controllers
             {
                 return RedirectToAction("List", "Users");
             }
+            //  ViewBag.Succeed = false;
             return View();
         }
 
         [HttpPost("Login")]
         public ActionResult Login(string username, string password)
         {
-            Microsoft.AspNetCore.Identity.SignInResult signInResult;
-            ApplicationUser applicationUser = _signInManager.UserManager.FindByNameAsync(username).Result;
-
-            if (applicationUser == null)
+            try
             {
-                return NotFound();
+                Microsoft.AspNetCore.Identity.SignInResult signInResult;
+                ApplicationUser applicationUser = _signInManager.UserManager.FindByNameAsync(username).Result;
+                if (applicationUser == null)
+                {
+                    ViewBag.Error = "There is no such user";
+                    return View("Index");
+                }
+                var isCompanyActive = _context.Companies!.Where(c => c.Id == applicationUser.CompanyId && c.StateId == 1).FirstOrDefault();
+                if (isCompanyActive == null)
+                {
+                    ViewBag.Error = "Your company is inactive. Please contact your administrator.";
+                    return View("Index");
+                }
+                signInResult = _signInManager.PasswordSignInAsync(applicationUser, password, false, false).Result;
+                if (signInResult.Succeeded)
+                {
+                    ViewBag.Succeed = true;
+                    ViewBag.Error = null;
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.Error = "An error occurred while logging in";
+                    return View("Index");
+                }
             }
-            signInResult = _signInManager.PasswordSignInAsync(applicationUser, password, false, false).Result;
-            if (signInResult.Succeeded)
+            catch (Exception e)
             {
-                return RedirectToAction("Index", "Home");
+                ViewBag.Error = "ERROR !!!";
+                return View("Index");
             }
-
             return Ok();
         }
 
