@@ -24,6 +24,7 @@ namespace Mealify.Data
             modelBuilder.Entity<Category>().HasOne(u => u.State).WithMany().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Food>().HasOne(u => u.State).WithMany().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Company>().HasOne(u => u.State).WithMany().OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<RestaurantUser>().HasKey(r => new { r.RestaurantId, r.ApplicationUserId });
             modelBuilder.Entity<FoodMenus>().HasKey(fm => new { fm.MenuId, fm.ContentId });
             base.OnModelCreating(modelBuilder);

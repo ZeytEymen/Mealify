@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mealify.Data;
+﻿using Mealify.Data;
 using Mealify.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Mealify.Data;
-using Mealify.Models;
-
-using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Microsoft.AspNetCore.Http.Metadata;
 using System.Data;
 
 
@@ -60,7 +45,7 @@ namespace Mealify.Controllers
                 companies = _context.Companies!
                     .Include(c => c.State)
                     .Include(c => c.ParentCompany)
-                    .Where(c => c.Id == activeUser.CompanyId).ToList();
+                    .Where(c => c.Id == activeUser.CompanyId || c.ParentCompanyId == activeUser.CompanyId).ToList();
             }
             return View(companies);
         }

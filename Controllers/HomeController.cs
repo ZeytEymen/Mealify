@@ -24,11 +24,6 @@ namespace Mealify.Controllers
 
         public ActionResult Index()
         {
-            //if (!User.Identity.IsAuthenticated)
-            //{
-            //    return RedirectToAction("Login", "Login");
-            //}
-
             //var company = _context.Companies!.Where(c => c.StateId == 1 && c.ParentCompany != null).ToList();
             var company = _context.Companies!.Where(c => c.StateId == 1).Include(c => c.Restaurants).Where(c => c.Restaurants!.Count() >= 1).ToList();
             ViewData["Companies"] = new SelectList(company, "Id", "Name");

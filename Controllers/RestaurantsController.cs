@@ -30,13 +30,21 @@ namespace Mealify.Controllers
             }
             else if (role.Contains("CompanyAdmin"))
             {
-                restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.CompanyId == activeUser.CompanyId).ToList();
+                restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.Company!.ParentCompanyId == activeUser.CompanyId).ToList();
             }
             else if (role.Contains("RestaurantAdmin"))
             {
-                restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.CompanyId == activeUser.CompanyId).ToList();
+                List<RestaurantUser> restaurantUsers = _context.RestaurantUsers!.Include(ru => ru.Restaurant).Include(ru => ru.Restaurant!.Company).Where(ru => ru.ApplicationUserId == activeUser.Id).ToList();
+                ViewData["RestaurantUsers"] = restaurantUsers;
+                //restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Include(r => a)Where(r => r.Id == a.).ToList();
             }
             return View(restaurants);
+        }
+
+        public ActionResult GetRestaurants(int id)
+        {
+            var restaurant = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.CompanyId == id).ToList();
+            return View(restaurant);
         }
 
 
@@ -52,12 +60,8 @@ namespace Mealify.Controllers
             }
             else if (role.Contains("CompanyAdmin"))
             {
-                List<SelectListItem> items = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = activeUser.CompanyId.ToString(), Text = activeUser.Company!.Name.ToString() }
-                };
-                ViewData["CompanyId"] = new SelectList(items, "Id", "Name");
-                ViewBag.Authorized = true;
+               
+              
             }
             else
                 ViewBag.Authorized = false;
@@ -86,7 +90,20 @@ namespace Mealify.Controllers
         // GET: RestaurantsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var activeUser = _userManager.GetUserAsync(User).Result;
+            var role = _userManager.GetRolesAsync(activeUser).Result;
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
+            {
+                ViewBag.Authorized = true;
+            }
+            else
+                ViewBag.Authorized = false;
+            var restaurant = _context.Restaurants!.FindAsync(id).Result;
+            if (restaurant == null)
+                return NotFound();
+
+            ViewData["StateId"] = new SelectList(_context.Set<State>(), "Id", "Name", restaurant.StateId);
+            return View(restaurant);
         }
 
         // POST: RestaurantsController/Edit/5

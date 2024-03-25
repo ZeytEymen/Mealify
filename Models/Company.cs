@@ -51,7 +51,7 @@ namespace Mealify.Models
         [ForeignKey("ParentCompanyId")]
         public Company? ParentCompany { get; set; }
 
-        public List<Restaurant>? Restaurants { get; set; }
+        public virtual List<Restaurant>? Restaurants { get; set; }
 
 
     }

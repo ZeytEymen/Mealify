@@ -4,6 +4,7 @@ using Mealify.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mealify.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240322074130_deneme")]
+    partial class deneme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,6 +151,9 @@ namespace Mealify.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("EMail")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -187,6 +192,8 @@ namespace Mealify.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ParentCompanyId");
 
@@ -493,6 +500,10 @@ namespace Mealify.Migrations
 
             modelBuilder.Entity("Mealify.Models.Company", b =>
                 {
+                    b.HasOne("Mealify.Models.ApplicationUser", null)
+                        .WithMany("Companies")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Mealify.Models.Company", "ParentCompany")
                         .WithMany()
                         .HasForeignKey("ParentCompanyId");
@@ -633,6 +644,11 @@ namespace Mealify.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Mealify.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Companies");
                 });
 
             modelBuilder.Entity("Mealify.Models.Company", b =>

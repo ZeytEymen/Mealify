@@ -25,10 +25,14 @@ namespace Mealify.Models
         public override string? PhoneNumber { get; set; }
 
         public DateTime RegisterDate { get; set; }
+
         public byte StateId { get; set; }
+
         public int CompanyId { get; set; }
+
         [ForeignKey("StateId")]
         public State? State { get; set; }
+
         [ForeignKey("CompanyId")]
         public Company? Company { get; set; }
     }

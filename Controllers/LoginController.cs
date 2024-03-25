@@ -23,17 +23,17 @@ namespace Mealify.Controllers
             {
                 return RedirectToAction("List", "Users");
             }
-            //  ViewBag.Succeed = false;
             return View();
         }
 
         [HttpPost("Login")]
         public ActionResult Login(string username, string password)
-        {
+        {            
             try
             {
                 Microsoft.AspNetCore.Identity.SignInResult signInResult;
                 ApplicationUser applicationUser = _signInManager.UserManager.FindByNameAsync(username).Result;
+                var role = _signInManager.UserManager.GetRolesAsync(applicationUser).Result;
                 if (applicationUser == null)
                 {
                     ViewBag.Error = "There is no such user";
@@ -42,8 +42,11 @@ namespace Mealify.Controllers
                 var isCompanyActive = _context.Companies!.Where(c => c.Id == applicationUser.CompanyId && c.StateId == 1).FirstOrDefault();
                 if (isCompanyActive == null)
                 {
-                    ViewBag.Error = "Your company is inactive. Please contact your administrator.";
-                    return View("Index");
+                    if(!role.Contains("Admin"))
+                    {
+                        ViewBag.Error = "Your company is inactive. Please contact your administrator.";
+                        return View("Index");
+                    }
                 }
                 signInResult = _signInManager.PasswordSignInAsync(applicationUser, password, false, false).Result;
                 if (signInResult.Succeeded)
@@ -58,17 +61,16 @@ namespace Mealify.Controllers
                     return View("Index");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ViewBag.Error = "ERROR !!!";
                 return View("Index");
             }
-            return Ok();
         }
 
         public ActionResult Logout()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 _signInManager.SignOutAsync().Wait();
             }

@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.State = "";
+    ViewBag.Cls = "";
+}
+@model IEnumerable<Mealify.Models.Food>
+
+
+<script>$(document).ready(function () {
+        $('#FoodTable').DataTable();
+    });</script>
+
+<h1 class="text-center" style="padding:30px">Category List</h1>
+
+    <table id="FoodTable" class="table table-striped table-hover">
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>State</th>
+                <th style="width:315px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (@item.State!.Id == 0)
+                {
+                    ViewBag.State = "Deleted";
+                    ViewBag.Cls = "btn-danger";
+
+                }
+                else if (@item.State!.Id == 1)
+                {
+                    ViewBag.State = "Active";
+                    ViewBag.Cls = "btn-success";
+                }
+                else
+                {
+                    ViewBag.State = "Passive";
+                    ViewBag.Cls = "btn-secondary";
+                }
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Category!.Name</td>
+                    <td><span class="btn @ViewBag.Cls btn-sm">@ViewBag.State</span></td>
+                    <td>
+                        <a class="btn btn-info btn-sm">Go to Foods</a>
+                        <a onclick="return false;" data-url="Foods/Edit/@item.Id" data-title="Update @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-primary btn-sm">Edit</a>
+                        <a onclick="return false;" data-url="Foods/Delete/@item.Id" data-title="Deleting @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
