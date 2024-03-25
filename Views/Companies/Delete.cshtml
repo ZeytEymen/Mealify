@@ -8,9 +8,8 @@
 {
     <div class="postResult"></div>
     <form id="deleteCompany" onsubmit="return false">
-        <input type="hidden" />
         <span>Are you really sure delete this item</span>
-        <input data-send="1" data-post-url="Companies/Delete" data-action="deleteCompany" type="submit" value="Yes I'm Sure Delete" class="float-end btn btn-danger" />
+        <input data-send="1" data-post-url="Companies/DeleteConfirmed/@ViewBag.Id" data-action="deleteCompany" type="submit" value="Yes I'm Sure Delete" class="float-end btn btn-danger" />
     </form>
 }
 @if(!ViewBag.Authorized)

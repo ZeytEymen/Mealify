@@ -158,11 +158,13 @@ namespace Mealify.Controllers
 
         public ActionResult Delete(int id)
         {
+           
             var activeUser = _userManager.GetUserAsync(User).Result;
             var role = _userManager.GetRolesAsync(activeUser).Result;
             if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
             {
                 ViewBag.Authorized = true;
+                ViewBag.Id = id;
             }
             else
                 ViewBag.Authorized = false;
@@ -171,11 +173,11 @@ namespace Mealify.Controllers
         }
         [Authorize(Roles = "Admin,CompanyAdmin")]
         [HttpPost]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int Id)
         {
             try
             {
-                var company = _context.Companies!.Where(c => c.Id == id).FirstOrDefault();
+                var company = _context.Companies!.Where(c => c.Id == Id).FirstOrDefault();
                 company!.StateId = 0;
                 _context.Companies!.Update(company);
                 _context.SaveChanges();

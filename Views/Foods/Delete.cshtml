@@ -7,9 +7,9 @@
 @if (ViewBag.Authorized)
 {
     <div class="postResult"></div>
-    <form id="deleteRestaurant" onsubmit="return false">
+    <form id="deleteFood" onsubmit="return false">
         <span>Are you really sure delete this item</span>
-        <input data-send="1" data-post-url="Restaurants/DeleteConfirmed/@ViewBag.Id" data-action="deleteRestaurant" type="submit" value="Yes I'm Sure Delete" class="float-end btn btn-danger" />
+        <input data-send="1" data-post-url="Foods/DeleteConfirmed/@ViewBag.Id" data-action="deleteFood" type="submit" value="Yes I'm Sure Delete" class="float-end btn btn-danger" />
     </form>
 }
 @if (!ViewBag.Authorized)

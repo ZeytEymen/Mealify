@@ -1,11 +1,13 @@
 ﻿using System.Data;
 using Mealify.Data;
 using Mealify.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Mealify.Controllers
 {
@@ -67,38 +69,42 @@ namespace Mealify.Controllers
         {
             var activeUser = _userManager.GetUserAsync(User).Result;
             var role = _userManager.GetRolesAsync(activeUser).Result;
-            ViewData["StateId"] = new SelectList(_context.Set<State>(), "Id", "Name");
-            if (role.Contains("Admin"))
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
             {
+                ViewData["StateId"] = new SelectList(_context.Set<State>(), "Id", "Name");
                 ViewData["CompanyId"] = new SelectList(_context.Set<Company>(), "Id", "Name");
                 ViewBag.Authorized = true;
             }
-            else if (role.Contains("CompanyAdmin"))
-            {
-               
-              
-            }
             else
                 ViewBag.Authorized = false;
-
             return View();
         }
-
-
-
-
-        // POST: RestaurantsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [Authorize(Roles = "Admin,CompanyAdmin")]
+        public ActionResult Create(Restaurant restaurant)
         {
+            restaurant.RegisterDate = DateTime.Now;
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(restaurant);
+                    _context.SaveChanges();
+                    return Ok("ok");
+                }
+                else
+                {
+                    var errorMessages = ModelState.Values.SelectMany(v => v.Errors)
+                                 .Select(e => e.ErrorMessage)
+                                 .ToList();
+                    var errorMessage = string.Join(" ", errorMessages);
+
+                    return Ok(errorMessage);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Ok(ex.Message);
             }
         }
 
@@ -109,11 +115,12 @@ namespace Mealify.Controllers
             var role = _userManager.GetRolesAsync(activeUser).Result;
             if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
             {
+                ViewBag.Id = id;
                 ViewBag.Authorized = true;
             }
             else
                 ViewBag.Authorized = false;
-            var restaurant = _context.Restaurants!.FindAsync(id).Result;
+            var restaurant = _context.Restaurants!.Include(r => r.Company).Include(r => r.State).Where(r => r.Id == id).FirstOrDefault();
             if (restaurant == null)
                 return NotFound();
 
@@ -123,38 +130,65 @@ namespace Mealify.Controllers
 
         // POST: RestaurantsController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Restaurant restaurant)
         {
+            restaurant.RegisterDate = DateTime.Now;
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Update(restaurant);
+                    _context.SaveChanges();
+                    return Ok("ok");
+                }
+                else
+                {
+                    var errorMessages = ModelState.Values.SelectMany(v => v.Errors)
+                                 .Select(e => e.ErrorMessage)
+                                 .ToList();
+                    var errorMessage = string.Join(" ", errorMessages);
+
+                    return Ok(errorMessage);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Ok(ex.Message);
             }
+
         }
 
         // GET: RestaurantsController/Delete/5
         public ActionResult Delete(int id)
         {
+            var activeUser = _userManager.GetUserAsync(User).Result;
+            var role = _userManager.GetRolesAsync(activeUser).Result;
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
+            {
+                ViewBag.Authorized = true;
+                ViewBag.Id = id;
+            }
+            else
+                ViewBag.Authorized = false;
+
             return View();
         }
 
-        // POST: RestaurantsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var restaurant = _context.Restaurants!.Where(r => r.Id == id).FirstOrDefault();
+                restaurant!.StateId = 0;
+                _context.Restaurants!.Update(restaurant);
+                _context.SaveChanges();
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                return Ok(e.Message);
             }
+            return Ok("ok");
         }
     }
 }
