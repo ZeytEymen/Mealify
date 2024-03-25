@@ -1,0 +1,61 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+
+@model Mealify.Models.ApplicationUser
+
+@if (!ViewBag.Authorized)
+{
+    <p class="text-center">Seems like <strong class="text-bg-danger">&nbsp;YOU ARE NOT AUTHORIZED&nbsp;</strong> for this action !!!</p>
+}
+@if (ViewBag.Authorized)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="postResult"></div>
+            <form id="createUser" onsubmit="return false">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StateId" class="control-label"></label>
+                    <select asp-for="StateId" class="form-control" asp-items="ViewBag.StateId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.Companies">
+                    </select>
+                </div><br />
+                <div class="form-group">
+                    <input data-send="1" data-post-url="Users/Create" data-action="createUser" type="submit" value="Create" class="btn btn-primary float-end" />
+                </div>
+            </form>
+        </div>
+    </div>
+}

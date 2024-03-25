@@ -1,4 +1,5 @@
-﻿using Mealify.Data;
+﻿using System.Data;
+using Mealify.Data;
 using Mealify.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -31,12 +32,12 @@ namespace Mealify.Controllers
             else if (role.Contains("CompanyAdmin"))
             {
                 restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.Company!.ParentCompanyId == activeUser.CompanyId).ToList();
+
             }
             else if (role.Contains("RestaurantAdmin"))
             {
                 List<RestaurantUser> restaurantUsers = _context.RestaurantUsers!.Include(ru => ru.Restaurant).Include(ru => ru.Restaurant!.Company).Where(ru => ru.ApplicationUserId == activeUser.Id).ToList();
                 ViewData["RestaurantUsers"] = restaurantUsers;
-                //restaurants = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Include(r => a)Where(r => r.Id == a.).ToList();
             }
             return View(restaurants);
         }
@@ -45,6 +46,20 @@ namespace Mealify.Controllers
         {
             var restaurant = _context.Restaurants!.Include(r => r.State).Include(r => r.Company).Where(r => r.CompanyId == id).ToList();
             return View(restaurant);
+        }
+
+        public ActionResult AddRestaurantUser(int restaurantId)
+        {
+            var activeUser = _userManager.GetUserAsync(User).Result;
+            var role = _userManager.GetRolesAsync(activeUser).Result;
+            if (role.Contains("Admin") || role.Contains("CompanyAdmin"))
+            {
+                ViewBag.Authorized = true;
+            }
+            else
+                ViewBag.Authorized = false;
+            var users = _userManager.Users.Where(u => u.StateId == 1).ToList();
+            return View(users);
         }
 
 

@@ -35,17 +35,27 @@ namespace Mealify.Controllers
             }
             else if (role.Contains("CompanyAdmin"))
             {
+                
                 companies = _context.Companies!
                     .Include(c => c.State)
                     .Include(c => c.ParentCompany)
                     .Where(c => c.Id == activeUser.CompanyId || c.ParentCompanyId == activeUser.CompanyId).ToList();
+               
+             
             }
             else if (role.Contains("RestaurantAdmin"))
             {
+                /*
                 companies = _context.Companies!
                     .Include(c => c.State)
                     .Include(c => c.ParentCompany)
                     .Where(c => c.Id == activeUser.CompanyId || c.ParentCompanyId == activeUser.CompanyId).ToList();
+                */
+                
+                var company = _context.Companies.Include(c => c.State).Where(c => c.Id == activeUser.CompanyId).FirstOrDefault();
+                var parent = _context.Companies.Include(c => c.State).Where(c => c.Id == company.ParentCompanyId).FirstOrDefault();
+                companies.Add(parent);
+                companies.Add(company);
             }
             return View(companies);
         }

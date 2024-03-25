@@ -55,7 +55,8 @@
                     <td>@item.Restaurant.Company.Name</td>
                     <td><span class="btn @ViewBag.Cls btn-sm">@ViewBag.State</span></td>
                     <td>
-                        <a class="btn btn-info btn-sm">Go to Categories</a>
+                        <a asp-action="GetCategories" asp-controller="Categories" asp-route-id="@item.Restaurant.Id" class="btn btn-info btn-sm">Go to Categories</a>
+                        <a asp-controller="Users" asp-action="GetRestaurantUsers" asp-route-id="@item.Restaurant.Id" class="btn btn-info btn-sm">See Users</a>
                         <a data-url="Restaurants/Edit/@item.Restaurant.Id" data-title="Update @item.Restaurant.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-primary btn-sm">Edit</a>
                         <a data-url="Restaurants/Delete/@item.Restaurant.Id" data-title="Deleting @item.Restaurant.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-danger btn-sm">Delete</a>
                     </td>
@@ -112,6 +113,9 @@
                     <td><span class="btn @ViewBag.Cls btn-sm">@ViewBag.State</span></td>
                     <td>
                         <a asp-action="GetCategories" asp-controller="Categories" asp-route-id="@item.Id" class="btn btn-info btn-sm">Go to Categories</a>
+                        <a asp-controller="Users" asp-action="GetRestaurantUsers" asp-route-id="@item.Id" class="btn btn-info btn-sm">See Users</a>
+                        @*<a asp-controller="Restaurants" asp-action="AddRestaurantUser" asp-route-id="@item.Id" data-url="Restaurants/Edit/@item.Id" data-title="Update @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-info btn-sm">Add Users</a>*@
+                        <a data-url="Restaurants/AddRestaurantUser/@item.Id" data-title="Add User For @item.Name " href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-info btn-sm">Add Users</a>
                         <a data-url="Restaurants/Edit/@item.Id" data-title="Update @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-primary btn-sm">Edit</a>
                         <a data-url="Restaurants/Delete/@item.Id" data-title="Deleting @item.Name" href="javascript:;" data-open="ajmodal" data-bs-toggle="modal" data-bs-target="#genelModal" class="btn btn-danger btn-sm">Delete</a>
                     </td>
